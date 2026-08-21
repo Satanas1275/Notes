@@ -63,6 +63,15 @@ fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesReposit
         drawRect(baseColor)
         drawContent()
     }
+    // Backdrop séparé, ne capturant QUE le fond (mesh + couleur de base) — pas
+    // la liste ni les cartes. Les NoteCard réfractent celui-ci : si elles
+    // réfractaient `backdrop` (qui capture aussi la liste elle-même), une carte
+    // essaierait de se lire pendant qu'elle est en train d'être dessinée
+    // (référence circulaire) → crash au moment d'afficher une note dans la liste.
+    val meshBackdrop = rememberLayerBackdrop {
+        drawRect(baseColor)
+        drawContent()
+    }
 
     Box(
         Modifier
@@ -75,7 +84,9 @@ fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesReposit
                 .fillMaxSize()
                 .layerBackdrop(backdrop)
         ) {
-            MeshBackground(Modifier.fillMaxSize())
+            Box(Modifier.fillMaxSize().layerBackdrop(meshBackdrop)) {
+                MeshBackground(Modifier.fillMaxSize())
+            }
             AnimatedContent(
                 targetState = inEditor,
                 transitionSpec = {
@@ -97,7 +108,7 @@ fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesReposit
                     }
                 } else {
                     NotesListContent(
-                        backdrop = backdrop,
+                        backdrop = meshBackdrop,
                         state = state,
                         onOpenNote = { editorNoteId = it },
                         onRequestDelete = { pendingDeleteNote = it }
