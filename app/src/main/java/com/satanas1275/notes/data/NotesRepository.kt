@@ -90,6 +90,10 @@ object NotesRepository {
         update { notes -> notes.filterNot { it.id == id } }
     }
 
+    fun deleteAll() {
+        update { emptyList() }
+    }
+
     private fun update(transform: (List<Note>) -> List<Note>) {
         if (!initialized) return
         scope.launch {

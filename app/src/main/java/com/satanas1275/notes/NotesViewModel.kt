@@ -70,4 +70,6 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     fun setColor(id: String, colorIndex: Int) = repository.setColor(id, colorIndex)
 
     fun delete(id: String) = repository.delete(id)
+
+    fun deleteAll() = repository.deleteAll()
 }

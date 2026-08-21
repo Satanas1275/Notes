@@ -33,6 +33,7 @@ import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -62,6 +63,7 @@ import com.kyant.shapes.RoundedRectangle
 import com.satanas1275.notes.NotesViewModel
 import com.satanas1275.notes.NoteFilter
 import com.satanas1275.notes.data.Note
+import com.satanas1275.notes.ui.glass.GlassIconButton
 import com.satanas1275.notes.ui.glass.GlassSurface
 import com.satanas1275.notes.ui.glass.LiquidBottomTab
 import com.satanas1275.notes.ui.glass.LiquidBottomTabs
@@ -283,7 +285,8 @@ fun ListChrome(
     backdrop: Backdrop,
     state: com.satanas1275.notes.NotesUiState,
     viewModel: NotesViewModel,
-    onCreateNote: () -> Unit
+    onCreateNote: () -> Unit,
+    onOpenSettings: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     val dark = isSystemInDarkTheme()
@@ -295,16 +298,28 @@ fun ListChrome(
         )
     }
     Box(Modifier.fillMaxSize()) {
-        GlassSearchBar(
-            backdrop = backdrop,
-            query = state.query,
-            onQueryChange = viewModel::setQuery,
-            modifier = Modifier
+        Row(
+            Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
                 .safeContentPadding()
-                .padding(horizontal = 20f.dp, vertical = 12f.dp)
-        )
+                .padding(horizontal = 20f.dp, vertical = 12f.dp),
+            horizontalArrangement = Arrangement.spacedBy(12f.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            GlassSearchBar(
+                backdrop = backdrop,
+                query = state.query,
+                onQueryChange = viewModel::setQuery,
+                modifier = Modifier.weight(1f)
+            )
+            GlassIconButton(
+                imageVector = Icons.Rounded.Settings,
+                contentDescription = "Réglages",
+                backdrop = backdrop,
+                onClick = onOpenSettings
+            )
+        }
         Row(
             Modifier
                 .align(Alignment.BottomCenter)
