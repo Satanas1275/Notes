@@ -1,7 +1,8 @@
 package com.satanas1275.notes.ui.notes
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,7 +26,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -33,18 +33,12 @@ import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -60,6 +54,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kyant.backdrop.Backdrop
+import com.kyant.backdrop.drawBackdrop
+import com.kyant.backdrop.effects.blur
+import com.kyant.backdrop.effects.lens
+import com.kyant.backdrop.effects.vibrancy
+import com.kyant.shapes.RoundedRectangle
 import com.satanas1275.notes.NotesViewModel
 import com.satanas1275.notes.NoteFilter
 import com.satanas1275.notes.data.Note
@@ -72,20 +71,22 @@ import com.satanas1275.notes.ui.utils.formatNoteDate
 
 @Composable
 fun NotesListContent(
+    backdrop: Backdrop,
     state: com.satanas1275.notes.NotesUiState,
-    viewModel: NotesViewModel,
-    onOpenNote: (String) -> Unit
+    onOpenNote: (String) -> Unit,
+    onRequestDelete: (Note) -> Unit
 ) {
     val dark = isSystemInDarkTheme()
     val safePadding = WindowInsets.safeDrawing.asPaddingValues()
-    var pendingDelete by remember { mutableStateOf<Note?>(null) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
             start = 20f.dp,
             end = 20f.dp,
-            top = safePadding.calculateTopPadding() + 76f.dp,
+            // + 76dp pour laisser la place à la barre de recherche flottante,
+            // + un peu d'espace en plus pour ne pas coller "Mes notes" dessous.
+            top = safePadding.calculateTopPadding() + 96f.dp,
             bottom = safePadding.calculateBottomPadding() + 112f.dp
         ),
         verticalArrangement = Arrangement.spacedBy(12f.dp)
@@ -114,8 +115,9 @@ fun NotesListContent(
                 NoteCard(
                     note = note,
                     dark = dark,
+                    backdrop = backdrop,
                     onClick = { onOpenNote(note.id) },
-                    onLongClick = { pendingDelete = note },
+                    onLongClick = { onRequestDelete(note) },
                     modifier = Modifier.animateItem()
                 )
             }
@@ -128,8 +130,9 @@ fun NotesListContent(
                 NoteCard(
                     note = note,
                     dark = dark,
+                    backdrop = backdrop,
                     onClick = { onOpenNote(note.id) },
-                    onLongClick = { pendingDelete = note },
+                    onLongClick = { onRequestDelete(note) },
                     modifier = Modifier.animateItem()
                 )
             }
@@ -141,29 +144,6 @@ fun NotesListContent(
                 )
             }
         }
-    }
-
-    pendingDelete?.let { note ->
-        AlertDialog(
-            onDismissRequest = { pendingDelete = null },
-            title = { Text("Supprimer la note ?") },
-            text = {
-                Text("« ${note.title.ifBlank { "Sans titre" }} » sera définitivement supprimée.")
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.delete(note.id)
-                    pendingDelete = null
-                }) {
-                    Text("Supprimer", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { pendingDelete = null }) {
-                    Text("Annuler")
-                }
-            }
-        )
     }
 }
 
@@ -182,6 +162,7 @@ private fun SectionHeader(title: String) {
 private fun NoteCard(
     note: Note,
     dark: Boolean,
+    backdrop: Backdrop,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -193,7 +174,7 @@ private fun NoteCard(
         animationSpec = spring(dampingRatio = 0.7f, stiffness = 600f),
         label = "cardPress"
     )
-    val background = NotePalette[note.colorIndex.coerceIn(0, NotePalette.lastIndex)]
+    val cardTint = NotePalette[note.colorIndex.coerceIn(0, NotePalette.lastIndex)]
         .copy(alpha = if (dark) 0.34f else 0.46f)
     val contentColor = if (dark) Color.White else Color(0xFF14161B)
 
@@ -204,7 +185,19 @@ private fun NoteCard(
                 scaleX = scale
                 scaleY = scale
             }
-            .background(background, RoundedCornerShape(28f.dp))
+            // Même traitement que le "lazy scroll container" du catalogue Backdrop
+            // (vibrancy + lens qui réfractent le fond), avec un peu plus de blur
+            // et la teinte de couleur de la note en surface.
+            .drawBackdrop(
+                backdrop = backdrop,
+                shape = { RoundedRectangle(28f.dp) },
+                effects = {
+                    vibrancy()
+                    blur(14f.dp.toPx())
+                    lens(16f.dp.toPx(), 32f.dp.toPx())
+                },
+                onDrawSurface = { drawRect(cardTint) }
+            )
             .combinedClickable(
                 interactionSource = interactionSource,
                 indication = null,

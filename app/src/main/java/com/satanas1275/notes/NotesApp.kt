@@ -24,11 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import com.satanas1275.notes.data.Note
 import com.satanas1275.notes.data.NotesRepository
 import com.satanas1275.notes.ui.components.MeshBackground
 import com.satanas1275.notes.ui.editor.ColorPickerChrome
 import com.satanas1275.notes.ui.editor.EditorChrome
 import com.satanas1275.notes.ui.editor.NoteEditorContent
+import com.satanas1275.notes.ui.glass.GlassConfirmDialog
 import com.satanas1275.notes.ui.notes.ListChrome
 import com.satanas1275.notes.ui.notes.NotesListContent
 import com.satanas1275.notes.ui.theme.DarkBase
@@ -41,6 +43,12 @@ fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesReposit
     var closeRequestToken by remember { mutableIntStateOf(0) }
     var lastOpenedId by remember { mutableStateOf<String?>(null) }
     val inEditor = editorNoteId != null
+
+    // État des dialogs de confirmation, remonté ici pour que la carte en verre
+    // puisse réfracter le `backdrop` partagé (un vrai Dialog() système ouvrirait
+    // une fenêtre séparée qui ne peut pas voir ce qu'il y a derrière).
+    var pendingDeleteNote by remember { mutableStateOf<Note?>(null) }
+    var showEditorDeleteConfirm by remember { mutableStateOf(false) }
 
     SideEffect {
         if (editorNoteId != null) {
@@ -89,9 +97,10 @@ fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesReposit
                     }
                 } else {
                     NotesListContent(
+                        backdrop = backdrop,
                         state = state,
-                        viewModel = viewModel,
-                        onOpenNote = { editorNoteId = it }
+                        onOpenNote = { editorNoteId = it },
+                        onRequestDelete = { pendingDeleteNote = it }
                     )
                 }
             }
@@ -115,6 +124,7 @@ fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesReposit
                         note = note,
                         viewModel = viewModel,
                         onBack = { closeRequestToken++ },
+                        onRequestDelete = { showEditorDeleteConfirm = true },
                         modifier = Modifier.align(Alignment.TopCenter)
                     )
                     ColorPickerChrome(
@@ -134,6 +144,36 @@ fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesReposit
                     onCreateNote = { editorNoteId = viewModel.createNote() }
                 )
             }
+        }
+
+        // Dialogs en verre : toujours au-dessus de tout le reste.
+        pendingDeleteNote?.let { note ->
+            GlassConfirmDialog(
+                backdrop = backdrop,
+                title = "Supprimer la note ?",
+                message = "« ${note.title.ifBlank { "Sans titre" }} » sera définitivement supprimée.",
+                confirmLabel = "Supprimer",
+                onConfirm = {
+                    viewModel.delete(note.id)
+                    pendingDeleteNote = null
+                },
+                onDismiss = { pendingDeleteNote = null }
+            )
+        }
+        if (showEditorDeleteConfirm) {
+            GlassConfirmDialog(
+                backdrop = backdrop,
+                title = "Supprimer la note ?",
+                message = "Cette action est irréversible.",
+                confirmLabel = "Supprimer",
+                onConfirm = {
+                    val noteId = editorNoteId ?: lastOpenedId
+                    noteId?.let { viewModel.delete(it) }
+                    showEditorDeleteConfirm = false
+                    closeRequestToken++
+                },
+                onDismiss = { showEditorDeleteConfirm = false }
+            )
         }
     }
 }

@@ -3,24 +3,22 @@ package com.satanas1275.notes.ui.editor
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,10 +26,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,7 +55,8 @@ import com.kyant.backdrop.Backdrop
 import com.satanas1275.notes.NotesViewModel
 import com.satanas1275.notes.data.Note
 import com.satanas1275.notes.ui.glass.GlassIconButton
-import com.satanas1275.notes.ui.glass.GlassSurface
+import com.satanas1275.notes.ui.glass.LiquidBottomTab
+import com.satanas1275.notes.ui.glass.LiquidBottomTabs
 import com.satanas1275.notes.ui.icons.PinIcon
 import com.satanas1275.notes.ui.theme.NotePalette
 import kotlinx.coroutines.delay
@@ -122,6 +119,10 @@ fun NoteEditorContent(
     Column(
         Modifier
             .fillMaxSize()
+            // Seule source de vérité pour la hauteur du clavier : .imePadding().
+            // Le Spacer du bas ne doit PAS en rajouter une deuxième fois (voir plus bas),
+            // sinon la zone "Commencez à écrire" se retrouve écrasée/coupée quand le
+            // clavier apparaît (double comptage de l'inset IME).
             .imePadding()
             .padding(horizontal = 24f.dp)
     ) {
@@ -189,7 +190,11 @@ fun NoteEditorContent(
         )
         Spacer(
             Modifier.height(
-                WindowInsets.safeDrawing.asPaddingValues().calculateBottomPadding() + 96f.dp
+                // WindowInsets.safeDrawing inclut déjà l'inset IME : l'utiliser ici
+                // en plus de .imePadding() double-comptait la hauteur du clavier.
+                // On ne réserve que la place pour la barre système + le chrome fixe
+                // (barre de couleurs, 56dp) ; .imePadding() gère seule le clavier.
+                WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 96f.dp
             )
         )
     }
@@ -201,10 +206,10 @@ fun EditorChrome(
     note: Note?,
     viewModel: NotesViewModel,
     onBack: () -> Unit,
+    onRequestDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
-    var showDeleteConfirm by remember { mutableStateOf(false) }
 
     Row(
         modifier
@@ -235,30 +240,9 @@ fun EditorChrome(
                 imageVector = Icons.Rounded.Delete,
                 contentDescription = "Supprimer",
                 backdrop = backdrop,
-                onClick = { showDeleteConfirm = true }
+                onClick = onRequestDelete
             )
         }
-    }
-
-    if (showDeleteConfirm) {
-        AlertDialog(
-            onDismissRequest = { showDeleteConfirm = false },
-            title = { Text("Supprimer la note ?") },
-            text = { Text("Cette action est irréversible.") },
-            confirmButton = {
-                TextButton(onClick = {
-                    note?.let { viewModel.delete(it.id) }
-                    onBack()
-                }) {
-                    Text("Supprimer", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDeleteConfirm = false }) {
-                    Text("Annuler")
-                }
-            }
-        )
     }
 }
 
@@ -271,42 +255,40 @@ fun ColorPickerChrome(
 ) {
     val haptic = LocalHapticFeedback.current
     val dark = isSystemInDarkTheme()
+    val ringColor = if (dark) Color.White else Color(0xFF17181C)
 
-    Box(
+    Row(
         modifier
             .fillMaxWidth()
             .safeContentPadding()
-            .padding(horizontal = 24f.dp, vertical = 16f.dp),
-        contentAlignment = Alignment.Center
+            .padding(horizontal = 24f.dp, vertical = 16f.dp)
     ) {
-        GlassSurface(backdrop = backdrop, modifier = Modifier.height(56f.dp)) {
-            Row(
-                Modifier.padding(horizontal = 16f.dp),
-                horizontalArrangement = Arrangement.spacedBy(12f.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                NotePalette.forEachIndexed { index, color ->
-                    val selected = index == selectedColorIndex
+        // Même composant que la barre d'onglets en bas de la liste : on peut
+        // glisser le doigt d'une couleur à l'autre (pilule qui suit le drag,
+        // comme dans le catalogue Backdrop) ou taper directement une couleur.
+        LiquidBottomTabs(
+            selectedTabIndex = { selectedColorIndex },
+            onTabSelected = onSelectColor,
+            backdrop = backdrop,
+            tabsCount = NotePalette.size,
+            modifier = Modifier.fillMaxWidth(),
+            accentColor = MaterialTheme.colorScheme.primary
+        ) {
+            NotePalette.forEachIndexed { index, color ->
+                val selected = index == selectedColorIndex
+                LiquidBottomTab(onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onSelectColor(index)
+                }) {
                     Box(
                         Modifier
-                            .size(26f.dp)
+                            .size(if (selected) 26f.dp else 22f.dp)
                             .background(color, CircleShape)
                             .border(
                                 width = if (selected) 2.5f.dp else 0.5f.dp,
-                                color = if (selected) {
-                                    if (dark) Color.White else Color(0xFF17181C)
-                                } else {
-                                    Color.Transparent
-                                },
+                                color = if (selected) ringColor else Color.Transparent,
                                 shape = CircleShape
                             )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                onSelectColor(index)
-                            }
                     )
                 }
             }
