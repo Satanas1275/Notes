@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,27 +39,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -75,11 +64,11 @@ import com.satanas1275.notes.NotesViewModel
 import com.satanas1275.notes.NoteFilter
 import com.satanas1275.notes.data.Note
 import com.satanas1275.notes.ui.glass.GlassSurface
+import com.satanas1275.notes.ui.glass.LiquidBottomTab
+import com.satanas1275.notes.ui.glass.LiquidBottomTabs
 import com.satanas1275.notes.ui.icons.PinIcon
 import com.satanas1275.notes.ui.theme.NotePalette
 import com.satanas1275.notes.ui.utils.formatNoteDate
-import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @Composable
 fun NotesListContent(
@@ -304,6 +293,14 @@ fun ListChrome(
     onCreateNote: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
+    val dark = isSystemInDarkTheme()
+    val textColor = if (dark) Color.White else Color(0xFF17181C)
+    val tabs = remember {
+        listOf(
+            "Notes" to Icons.AutoMirrored.Rounded.List,
+            "Épinglées" to PinIcon
+        )
+    }
     Box(Modifier.fillMaxSize()) {
         GlassSearchBar(
             backdrop = backdrop,
@@ -324,12 +321,33 @@ fun ListChrome(
             horizontalArrangement = Arrangement.spacedBy(12f.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            GlassNavBar(
+            LiquidBottomTabs(
+                selectedTabIndex = { state.filter.ordinal },
+                onTabSelected = { index -> viewModel.setFilter(NoteFilter.entries[index]) },
                 backdrop = backdrop,
-                selectedIndex = state.filter.ordinal,
-                onSelectFilter = viewModel::setFilter,
-                modifier = Modifier.weight(1f)
-            )
+                tabsCount = tabs.size,
+                modifier = Modifier.weight(1f),
+                accentColor = MaterialTheme.colorScheme.primary
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    LiquidBottomTab(onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        viewModel.setFilter(NoteFilter.entries[index])
+                    }) {
+                        Icon(
+                            imageVector = tab.second,
+                            contentDescription = tab.first,
+                            tint = textColor,
+                            modifier = Modifier.size(24f.dp)
+                        )
+                        Text(
+                            text = tab.first,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = textColor
+                        )
+                    }
+                }
+            }
             GlassSurface(
                 backdrop = backdrop,
                 modifier = Modifier.size(64f.dp),
@@ -405,127 +423,6 @@ private fun GlassSearchBar(
                             indication = null
                         ) { onQueryChange("") }
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun GlassNavBar(
-    backdrop: Backdrop,
-    selectedIndex: Int,
-    onSelectFilter: (NoteFilter) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val dark = isSystemInDarkTheme()
-    val haptic = LocalHapticFeedback.current
-    val scope = rememberCoroutineScope()
-    val accent = MaterialTheme.colorScheme.primary
-    val textColor = if (dark) Color.White else Color(0xFF17181C)
-    val tabs = remember {
-        listOf(
-            "Notes" to Icons.AutoMirrored.Rounded.List,
-            "Épinglées" to PinIcon
-        )
-    }
-    val itemCount = tabs.size
-    val navSpring = spring<Float>(dampingRatio = 0.8f, stiffness = 350f)
-
-    BoxWithConstraints(modifier.height(64f.dp)) {
-        val slotWidthPx = constraints.maxWidth.toFloat() / itemCount
-        val indicator = remember { Animatable(selectedIndex.toFloat()) }
-        var isDragging by remember { mutableStateOf(false) }
-        var lastHapticSlot by remember { mutableIntStateOf(selectedIndex) }
-
-        LaunchedEffect(selectedIndex) {
-            if (!isDragging && indicator.targetValue != selectedIndex.toFloat()) {
-                indicator.animateTo(selectedIndex.toFloat(), navSpring)
-            }
-        }
-
-        GlassSurface(
-            backdrop = backdrop,
-            modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(itemCount, slotWidthPx) {
-                    detectHorizontalDragGestures(
-                        onDragStart = { offset ->
-                            isDragging = true
-                            scope.launch {
-                                indicator.snapTo((offset.x / slotWidthPx).coerceIn(0f, itemCount - 1f))
-                            }
-                        },
-                        onHorizontalDrag = { change, dragAmount ->
-                            change.consume()
-                            scope.launch {
-                                val value = ((indicator.value * slotWidthPx + dragAmount) / slotWidthPx)
-                                    .coerceIn(0f, itemCount - 1f)
-                                indicator.snapTo(value)
-                                val slot = value.roundToInt()
-                                if (slot != lastHapticSlot) {
-                                    lastHapticSlot = slot
-                                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                }
-                            }
-                        },
-                        onDragEnd = {
-                            isDragging = false
-                            val target = indicator.value.roundToInt().coerceIn(0, itemCount - 1)
-                            if (target != selectedIndex) {
-                                onSelectFilter(NoteFilter.entries[target])
-                            } else {
-                                scope.launch { indicator.animateTo(target.toFloat(), navSpring) }
-                            }
-                        },
-                        onDragCancel = {
-                            isDragging = false
-                            scope.launch { indicator.animateTo(selectedIndex.toFloat(), navSpring) }
-                        }
-                    )
-                },
-            overlay = {
-                val pad = 4f.dp.toPx()
-                val pillHeight = size.height - pad * 2
-                drawRoundRect(
-                    color = Color.White.copy(alpha = if (dark) 0.14f else 0.65f),
-                    topLeft = Offset(indicator.value * size.width / itemCount + pad, pad),
-                    size = Size(size.width / itemCount - pad * 2, pillHeight),
-                    cornerRadius = CornerRadius(pillHeight / 2f)
-                )
-            }
-        ) {
-            Row(Modifier.fillMaxSize()) {
-                tabs.forEachIndexed { index, tab ->
-                    val selected = index == selectedIndex
-                    Column(
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                                scope.launch { indicator.animateTo(index.toFloat(), navSpring) }
-                                onSelectFilter(NoteFilter.entries[index])
-                            },
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = tab.second,
-                            contentDescription = tab.first,
-                            tint = if (selected) accent else textColor.copy(alpha = 0.7f),
-                            modifier = Modifier.size(22f.dp)
-                        )
-                        Spacer(Modifier.height(2f.dp))
-                        Text(
-                            text = tab.first,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = if (selected) textColor else textColor.copy(alpha = 0.6f)
-                        )
-                    }
-                }
             }
         }
     }
