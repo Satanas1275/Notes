@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import com.satanas.notes.data.NotesRepository
 import com.satanas.notes.ui.components.MeshBackground
 import com.satanas.notes.ui.editor.ColorPickerChrome
 import com.satanas.notes.ui.editor.EditorChrome

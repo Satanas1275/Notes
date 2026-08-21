@@ -5,6 +5,7 @@ core = "1.19.0"
 activity = "1.13.0"
 lifecycle = "2.11.0"
 composeBom = "2026.08.00"
+iconsCore = "1.7.8"
 datastore = "1.2.1"
 backdrop = "2.0.0"
 kyantShapes = "1.2.0"
@@ -19,6 +20,7 @@ androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graph
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "iconsCore" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 backdrop = { group = "io.github.kyant0", name = "backdrop", version.ref = "backdrop" }
 kyant-shapes = { group = "io.github.kyant0", name = "shapes", version.ref = "kyantShapes" }
