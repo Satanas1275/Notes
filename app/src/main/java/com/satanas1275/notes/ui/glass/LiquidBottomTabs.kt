@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -57,7 +58,6 @@ import com.kyant.backdrop.shadow.InnerShadow
 import com.kyant.backdrop.shadow.Shadow
 import com.kyant.shapes.Capsule
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.sign
@@ -132,9 +132,18 @@ fun LiquidBottomTabs(
 
         val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
         val animationScope = rememberCoroutineScope()
-        var currentIndex by remember(selectedTabIndex) {
-            mutableIntStateOf(selectedTabIndex())
-        }
+
+        // `selectedTabIndex`/`onTabSelected` sont des lambdas recréées à chaque
+        // recomposition (elles capturent l'état parent, ex. `{ state.filter.ordinal }`).
+        // Les utiliser comme clé de `remember(...)` ou directement dans un
+        // LaunchedEffect à clé stable produit une closure "figée" sur une ancienne
+        // valeur : c'est ce qui faisait que la pille ne suivait jamais un
+        // changement d'onglet déclenché depuis l'extérieur (ex. tap direct sur un
+        // onglet). rememberUpdatedState garde toujours la dernière lambda.
+        val currentSelectedTabIndex = rememberUpdatedState(selectedTabIndex)
+        val currentOnTabSelected = rememberUpdatedState(onTabSelected)
+
+        var currentIndex by remember { mutableIntStateOf(selectedTabIndex()) }
         val dampedDragAnimation = remember(animationScope) {
             DampedDragAnimation(
                 animationScope = animationScope,
@@ -154,6 +163,7 @@ fun LiquidBottomTabs(
                             spring(1f, 300f, 0.5f)
                         )
                     }
+                    currentOnTabSelected.value(targetIndex)
                 },
                 onDrag = { _, dragAmount ->
                     updateValue(
@@ -166,18 +176,16 @@ fun LiquidBottomTabs(
                 }
             )
         }
-        LaunchedEffect(selectedTabIndex) {
-            snapshotFlow { selectedTabIndex() }
-                .collectLatest { index ->
-                    currentIndex = index
-                }
-        }
+        // Synchronise la pille quand la sélection change depuis l'extérieur
+        // (tap direct sur un LiquidBottomTab, qui met à jour le parent sans
+        // passer par le geste de drag ci-dessus).
         LaunchedEffect(dampedDragAnimation) {
-            snapshotFlow { currentIndex }
-                .drop(1)
+            snapshotFlow { currentSelectedTabIndex.value() }
                 .collectLatest { index ->
-                    dampedDragAnimation.animateToValue(index.toFloat())
-                    onTabSelected(index)
+                    if (index != currentIndex) {
+                        currentIndex = index
+                        dampedDragAnimation.animateToValue(index.toFloat())
+                    }
                 }
         }
 
