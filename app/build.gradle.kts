@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.satanas.notes"
+    namespace = "com.satanas1275.notes"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.satanas.notes"
+        applicationId = "com.satanas1275.notes"
         minSdk = 26
         targetSdk = 37
         versionCode = 1

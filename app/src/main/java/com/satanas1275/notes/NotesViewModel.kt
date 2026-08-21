@@ -1,9 +1,9 @@
-package com.satanas.notes
+package com.satanas1275.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.satanas.notes.data.Note
-import com.satanas.notes.data.NotesRepository
+import com.satanas1275.notes.data.Note
+import com.satanas1275.notes.data.NotesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

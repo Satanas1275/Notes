@@ -1,4 +1,4 @@
-package com.satanas.notes.ui.glass
+package com.satanas1275.notes.ui.glass
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring

@@ -1,11 +1,11 @@
-package com.satanas.notes
+package com.satanas1275.notes
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.satanas.notes.data.NotesRepository
-import com.satanas.notes.ui.theme.NotesTheme
+import com.satanas1275.notes.data.NotesRepository
+import com.satanas1275.notes.ui.theme.NotesTheme
 
 class MainActivity : ComponentActivity() {
 

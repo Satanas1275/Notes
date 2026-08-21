@@ -11,9 +11,9 @@ Application de notes Android avec un thème **Liquid Glass** (verre liquide) con
 - Thème clair / sombre adaptatif
 - Interface entièrement « liquid glass » :
   - Barre de recherche en verre (flou + réfraction + vibrance)
-  - Barre de navigation en verre avec pilule de sélection animée
-  - Boutons d'action en verre avec retour tactile (échelle + lentille)
-  - Fond dégradé animé réfracté à travers le verre
+  - Barre d'onglets en verre : glissez le doigt dessus pour changer d'onglet (pilule qui suit le doigt + retour haptique)
+  - Bouton « + » en verre teinté séparé pour créer une note
+  - Fond dégradé statique réfracté à travers le verre (optimisé pour les performances)
 
 ## Stack technique
 
@@ -30,7 +30,7 @@ Application de notes Android avec un thème **Liquid Glass** (verre liquide) con
 ## Structure
 
 ```
-app/src/main/java/com/satanas/notes/
+app/src/main/java/com/satanas1275/notes/
 ├── MainActivity.kt
 ├── NotesApp.kt              # Scaffold racine + backdrop partagé + navigation
 ├── NotesViewModel.kt        # État UI (liste, recherche, filtres)

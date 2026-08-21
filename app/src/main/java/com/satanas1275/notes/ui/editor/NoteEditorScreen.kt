@@ -1,4 +1,4 @@
-package com.satanas.notes.ui.editor
+package com.satanas1275.notes.ui.editor
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -56,12 +56,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kyant.backdrop.Backdrop
-import com.satanas.notes.NotesViewModel
-import com.satanas.notes.data.Note
-import com.satanas.notes.ui.glass.GlassIconButton
-import com.satanas.notes.ui.glass.GlassSurface
-import com.satanas.notes.ui.icons.PinIcon
-import com.satanas.notes.ui.theme.NotePalette
+import com.satanas1275.notes.NotesViewModel
+import com.satanas1275.notes.data.Note
+import com.satanas1275.notes.ui.glass.GlassIconButton
+import com.satanas1275.notes.ui.glass.GlassSurface
+import com.satanas1275.notes.ui.icons.PinIcon
+import com.satanas1275.notes.ui.theme.NotePalette
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop

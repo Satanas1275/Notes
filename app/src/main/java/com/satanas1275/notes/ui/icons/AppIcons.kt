@@ -1,4 +1,4 @@
-package com.satanas.notes.ui.icons
+package com.satanas1275.notes.ui.icons
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType

@@ -1,4 +1,4 @@
-package com.satanas.notes.data
+package com.satanas1275.notes.data
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit

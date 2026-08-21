@@ -1,4 +1,4 @@
-package com.satanas.notes
+package com.satanas1275.notes
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -24,15 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
-import com.satanas.notes.data.NotesRepository
-import com.satanas.notes.ui.components.MeshBackground
-import com.satanas.notes.ui.editor.ColorPickerChrome
-import com.satanas.notes.ui.editor.EditorChrome
-import com.satanas.notes.ui.editor.NoteEditorContent
-import com.satanas.notes.ui.notes.ListChrome
-import com.satanas.notes.ui.notes.NotesListContent
-import com.satanas.notes.ui.theme.DarkBase
-import com.satanas.notes.ui.theme.LightBase
+import com.satanas1275.notes.data.NotesRepository
+import com.satanas1275.notes.ui.components.MeshBackground
+import com.satanas1275.notes.ui.editor.ColorPickerChrome
+import com.satanas1275.notes.ui.editor.EditorChrome
+import com.satanas1275.notes.ui.editor.NoteEditorContent
+import com.satanas1275.notes.ui.notes.ListChrome
+import com.satanas1275.notes.ui.notes.NotesListContent
+import com.satanas1275.notes.ui.theme.DarkBase
+import com.satanas1275.notes.ui.theme.LightBase
 
 @Composable
 fun NotesApp(viewModel: NotesViewModel = viewModel { NotesViewModel(NotesRepository) }) {

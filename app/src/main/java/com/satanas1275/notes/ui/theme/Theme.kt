@@ -1,4 +1,4 @@
-package com.satanas.notes.ui.theme
+package com.satanas1275.notes.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
