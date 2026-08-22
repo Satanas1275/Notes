@@ -51,4 +51,5 @@
     <string name="dialog_reset_all_title">すべてのメモをリセットしますか？</string>
     <string name="dialog_reset_all_message">すべてのメモが完全に削除されます。この操作は元に戻せません。</string>
     <string name="action_reset">リセット</string>
+    <string name="yesterday">昨日</string>
 </resources>

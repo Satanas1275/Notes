@@ -55,10 +55,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import android.net.Uri
 import com.kyant.backdrop.Backdrop
+import com.satanas1275.notes.R
 import com.satanas1275.notes.data.AppSettings
 import com.satanas1275.notes.data.BackgroundStyle
 import com.satanas1275.notes.ui.components.AppBackground
@@ -72,7 +74,7 @@ import com.satanas1275.notes.ui.theme.NotePalette
 private data class LanguageOption(val tag: String?, val label: String)
 
 private val LanguageOptions = listOf(
-    LanguageOption(null, "Système (par défaut)"),
+    LanguageOption(null, ""), // libellé résolu via stringResource (langue du système)
     LanguageOption("fr", "Français"),
     LanguageOption("en", "English"),
     LanguageOption("es", "Español"),
@@ -101,13 +103,13 @@ fun SettingsChrome(
     ) {
         GlassIconButton(
             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-            contentDescription = "Retour",
+            contentDescription = stringResource(R.string.cd_back),
             backdrop = backdrop,
             onClick = onBack
         )
         Spacer(Modifier.size(14f.dp))
         Text(
-            text = "Réglages",
+            text = stringResource(R.string.settings_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = textColor
@@ -140,7 +142,7 @@ fun SettingsContent(
             ),
         verticalArrangement = Arrangement.spacedBy(28f.dp)
     ) {
-        SettingsSection(title = "Apparence") {
+        SettingsSection(title = stringResource(R.string.section_appearance)) {
             AppearanceSettings(
                 backdrop = backdrop,
                 style = settings.backgroundStyle,
@@ -153,7 +155,7 @@ fun SettingsContent(
             )
         }
 
-        SettingsSection(title = "Synchronisation") {
+        SettingsSection(title = stringResource(R.string.section_sync)) {
             CloudSyncRow(
                 backdrop = backdrop,
                 enabled = settings.cloudSyncEnabled,
@@ -161,7 +163,7 @@ fun SettingsContent(
             )
         }
 
-        SettingsSection(title = "Langue") {
+        SettingsSection(title = stringResource(R.string.section_language)) {
             LanguageRow(
                 backdrop = backdrop,
                 currentTag = settings.languageTag,
@@ -169,15 +171,15 @@ fun SettingsContent(
             )
         }
 
-        SettingsSection(title = "Données") {
+        SettingsSection(title = stringResource(R.string.section_data)) {
             DangerRow(
                 backdrop = backdrop,
-                label = "Réinitialiser toutes les notes",
+                label = stringResource(R.string.action_reset_all_notes),
                 onClick = onRequestResetAllNotes
             )
         }
 
-        SettingsSection(title = "À propos") {
+        SettingsSection(title = stringResource(R.string.section_about)) {
             AboutRow()
         }
     }
@@ -210,11 +212,14 @@ private fun AppearanceSettings(
 ) {
     val dark = isSystemInDarkTheme()
     val textColor = if (dark) Color.White else Color(0xFF14161B)
-    val styles = remember {
+    val labelGradient = stringResource(R.string.style_gradient)
+    val labelSolidColor = stringResource(R.string.style_solid_color)
+    val labelImage = stringResource(R.string.style_image)
+    val styles = remember(labelGradient, labelSolidColor, labelImage) {
         listOf(
-            Triple(BackgroundStyle.GRADIENT, "Dégradé", Icons.Rounded.Gradient),
-            Triple(BackgroundStyle.SOLID_COLOR, "Couleur", Icons.Rounded.Palette),
-            Triple(BackgroundStyle.IMAGE, "Image", Icons.Rounded.Wallpaper)
+            Triple(BackgroundStyle.GRADIENT, labelGradient, Icons.Rounded.Gradient),
+            Triple(BackgroundStyle.SOLID_COLOR, labelSolidColor, Icons.Rounded.Palette),
+            Triple(BackgroundStyle.IMAGE, labelImage, Icons.Rounded.Wallpaper)
         )
     }
 
@@ -290,12 +295,12 @@ private fun AppearanceSettings(
                     }
                     Column(Modifier.align(Alignment.CenterVertically)) {
                         Text(
-                            "Image personnalisée active",
+                            stringResource(R.string.image_active),
                             style = MaterialTheme.typography.bodyMedium,
                             color = textColor
                         )
                         Text(
-                            "Retirer",
+                            stringResource(R.string.action_remove),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.clickable(
@@ -318,7 +323,7 @@ private fun AppearanceSettings(
                     Icon(Icons.Rounded.Wallpaper, contentDescription = null, tint = textColor, modifier = Modifier.size(20f.dp))
                     Spacer(Modifier.size(10f.dp))
                     Text(
-                        if (hasCustomImage) "Changer l'image" else "Choisir une image",
+                        if (hasCustomImage) stringResource(R.string.action_change_image) else stringResource(R.string.action_choose_image),
                         color = textColor,
                         style = MaterialTheme.typography.labelLarge
                     )
@@ -345,9 +350,9 @@ private fun CloudSyncRow(backdrop: Backdrop, enabled: Boolean, onToggle: (Boolea
             Icon(Icons.Rounded.Cloud, contentDescription = null, tint = textColor.copy(alpha = 0.7f), modifier = Modifier.size(22f.dp))
             Spacer(Modifier.size(14f.dp))
             Column(Modifier.weight(1f)) {
-                Text("Synchronisation cloud", color = textColor, style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.cloud_sync_title), color = textColor, style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    "Bientôt disponible",
+                    stringResource(R.string.cloud_sync_subtitle),
                     color = textColor.copy(alpha = 0.5f),
                     style = MaterialTheme.typography.labelSmall
                 )
@@ -371,7 +376,9 @@ private fun LanguageRow(backdrop: Backdrop, currentTag: String?, onSelect: (Stri
     val dark = isSystemInDarkTheme()
     val textColor = if (dark) Color.White else Color(0xFF14161B)
     var expanded by remember { mutableStateOf(false) }
+    val systemDefaultLabel = stringResource(R.string.language_system_default)
     val current = LanguageOptions.firstOrNull { it.tag == currentTag } ?: LanguageOptions.first()
+    val currentLabel = if (current.tag == null) systemDefaultLabel else current.label
     val rotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f, label = "chevron")
 
     Column {
@@ -386,7 +393,7 @@ private fun LanguageRow(backdrop: Backdrop, currentTag: String?, onSelect: (Stri
             ) {
                 Icon(Icons.Rounded.Language, contentDescription = null, tint = textColor.copy(alpha = 0.7f), modifier = Modifier.size(20f.dp))
                 Spacer(Modifier.size(10f.dp))
-                Text(current.label, color = textColor, style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
+                Text(currentLabel, color = textColor, style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
                 Icon(
                     Icons.Rounded.ExpandMore,
                     contentDescription = null,
@@ -409,6 +416,7 @@ private fun LanguageRow(backdrop: Backdrop, currentTag: String?, onSelect: (Stri
             ) {
                 LanguageOptions.forEach { option ->
                     val selected = option.tag == currentTag
+                    val label = if (option.tag == null) systemDefaultLabel else option.label
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -423,7 +431,7 @@ private fun LanguageRow(backdrop: Backdrop, currentTag: String?, onSelect: (Stri
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            option.label,
+                            label,
                             color = textColor,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)

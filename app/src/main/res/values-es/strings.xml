@@ -52,4 +52,5 @@
     <string name="dialog_reset_all_title">¿Restablecer todas las notas?</string>
     <string name="dialog_reset_all_message">Todas tus notas se eliminarán permanentemente. Esta acción no se puede deshacer.</string>
     <string name="action_reset">Restablecer</string>
+    <string name="yesterday">Ayer</string>
 </resources>

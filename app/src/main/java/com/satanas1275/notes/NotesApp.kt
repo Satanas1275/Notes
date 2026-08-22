@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kyant.backdrop.backdrops.layerBackdrop
@@ -246,9 +247,12 @@ fun NotesApp(
         pendingDeleteNote?.let { note ->
             GlassConfirmDialog(
                 backdrop = backdrop,
-                title = "Supprimer la note ?",
-                message = "« ${note.title.ifBlank { "Sans titre" }} » sera définitivement supprimée.",
-                confirmLabel = "Supprimer",
+                title = stringResource(R.string.dialog_delete_note_title),
+                message = stringResource(
+                    R.string.dialog_delete_note_message,
+                    note.title.ifBlank { stringResource(R.string.untitled_note) }
+                ),
+                confirmLabel = stringResource(R.string.action_delete),
                 onConfirm = {
                     viewModel.delete(note.id)
                     pendingDeleteNote = null
@@ -259,9 +263,9 @@ fun NotesApp(
         if (showEditorDeleteConfirm) {
             GlassConfirmDialog(
                 backdrop = backdrop,
-                title = "Supprimer la note ?",
-                message = "Cette action est irréversible.",
-                confirmLabel = "Supprimer",
+                title = stringResource(R.string.dialog_delete_note_title),
+                message = stringResource(R.string.dialog_delete_note_irreversible_message),
+                confirmLabel = stringResource(R.string.action_delete),
                 onConfirm = {
                     val noteId = editorNoteId ?: lastOpenedId
                     noteId?.let { viewModel.delete(it) }
@@ -274,9 +278,9 @@ fun NotesApp(
         if (showResetAllConfirm) {
             GlassConfirmDialog(
                 backdrop = backdrop,
-                title = "Réinitialiser toutes les notes ?",
-                message = "Toutes vos notes seront définitivement supprimées. Cette action est irréversible.",
-                confirmLabel = "Réinitialiser",
+                title = stringResource(R.string.dialog_reset_all_title),
+                message = stringResource(R.string.dialog_reset_all_message),
+                confirmLabel = stringResource(R.string.action_reset),
                 onConfirm = {
                     viewModel.deleteAll()
                     showResetAllConfirm = false

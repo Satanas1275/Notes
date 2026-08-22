@@ -56,4 +56,5 @@
     <string name="dialog_reset_all_title">Réinitialiser toutes les notes ?</string>
     <string name="dialog_reset_all_message">Toutes vos notes seront définitivement supprimées. Cette action est irréversible.</string>
     <string name="action_reset">Réinitialiser</string>
+    <string name="yesterday">Hier</string>
 </resources>

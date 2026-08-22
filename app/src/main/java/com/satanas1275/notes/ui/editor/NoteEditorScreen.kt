@@ -45,6 +45,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
@@ -54,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kyant.backdrop.Backdrop
 import com.satanas1275.notes.NotesViewModel
+import com.satanas1275.notes.R
 import com.satanas1275.notes.data.Note
 import com.satanas1275.notes.ui.glass.GlassIconButton
 import com.satanas1275.notes.ui.glass.LiquidBottomTab
@@ -149,7 +151,7 @@ fun NoteEditorContent(
                 Box {
                     if (title.isEmpty()) {
                         Text(
-                            text = "Titre",
+                            text = stringResource(R.string.editor_title_placeholder),
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
                             color = textColor.copy(alpha = 0.3f)
@@ -176,7 +178,7 @@ fun NoteEditorContent(
                 Box {
                     if (content.isEmpty()) {
                         Text(
-                            text = "Commencez à écrire…",
+                            text = stringResource(R.string.editor_content_placeholder),
                             fontSize = 17.sp,
                             color = textColor.copy(alpha = 0.3f)
                         )
@@ -222,14 +224,14 @@ fun EditorChrome(
     ) {
         GlassIconButton(
             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-            contentDescription = "Retour",
+            contentDescription = stringResource(R.string.cd_back),
             backdrop = backdrop,
             onClick = onBack
         )
         Row(horizontalArrangement = Arrangement.spacedBy(10f.dp)) {
             GlassIconButton(
                 imageVector = PinIcon,
-                contentDescription = if (note?.pinned == true) "Désépingler" else "Épingler",
+                contentDescription = if (note?.pinned == true) stringResource(R.string.cd_unpin) else stringResource(R.string.cd_pin),
                 backdrop = backdrop,
                 iconTint = if (note?.pinned == true) MaterialTheme.colorScheme.primary else null,
                 onClick = {
@@ -239,7 +241,7 @@ fun EditorChrome(
             )
             GlassIconButton(
                 imageVector = Icons.Rounded.Delete,
-                contentDescription = "Supprimer",
+                contentDescription = stringResource(R.string.cd_delete),
                 backdrop = backdrop,
                 onClick = onRequestDelete
             )

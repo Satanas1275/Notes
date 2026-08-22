@@ -52,4 +52,5 @@
     <string name="dialog_reset_all_title">Redefinir todas as notas?</string>
     <string name="dialog_reset_all_message">Todas as suas notas serão excluídas permanentemente. Esta ação não pode ser desfeita.</string>
     <string name="action_reset">Redefinir</string>
+    <string name="yesterday">Ontem</string>
 </resources>

@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kyant.backdrop.Backdrop
@@ -28,6 +29,7 @@ import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.colorControls
 import com.kyant.backdrop.effects.lens
 import com.kyant.backdrop.highlight.Highlight
+import com.satanas1275.notes.R
 import com.kyant.shapes.Capsule
 import com.kyant.shapes.RoundedRectangle
 
@@ -127,7 +129,7 @@ fun GlassConfirmDialog(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Annuler", color = contentColor, style = MaterialTheme.typography.labelLarge)
+                    Text(stringResource(R.string.dialog_cancel), color = contentColor, style = MaterialTheme.typography.labelLarge)
                 }
                 Row(
                     Modifier

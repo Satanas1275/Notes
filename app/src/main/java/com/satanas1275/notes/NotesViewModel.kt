@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-enum class NoteFilter(val label: String) {
-    ALL("Notes"),
-    PINNED("Épinglées")
+enum class NoteFilter {
+    ALL,
+    PINNED
 }
 
 data class NotesUiState(

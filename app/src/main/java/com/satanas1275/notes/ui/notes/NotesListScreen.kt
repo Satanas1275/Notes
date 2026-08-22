@@ -225,7 +225,7 @@ private fun NoteCard(
                 Spacer(Modifier.width(8f.dp))
                 Icon(
                     imageVector = PinIcon,
-                    contentDescription = "Épinglée",
+                    contentDescription = stringResource(R.string.cd_pinned),
                     tint = contentColor.copy(alpha = 0.6f),
                     modifier = Modifier.size(15f.dp)
                 )
@@ -266,7 +266,7 @@ private fun EmptyState(showSearchHint: Boolean) {
         )
         Spacer(Modifier.height(16f.dp))
         Text(
-            text = if (showSearchHint) "Aucun résultat" else "Aucune note",
+            text = if (showSearchHint) stringResource(R.string.empty_no_results) else stringResource(R.string.empty_no_notes),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
             textAlign = TextAlign.Center
@@ -274,7 +274,7 @@ private fun EmptyState(showSearchHint: Boolean) {
         if (!showSearchHint) {
             Spacer(Modifier.height(6f.dp))
             Text(
-                text = "Appuyez sur le bouton + pour en créer une.",
+                text = stringResource(R.string.empty_no_notes_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
                 textAlign = TextAlign.Center
@@ -296,8 +296,8 @@ fun ListChrome(
     val textColor = if (dark) Color.White else Color(0xFF17181C)
     val tabs = remember {
         listOf(
-            "Notes" to Icons.AutoMirrored.Rounded.List,
-            "Épinglées" to PinIcon
+            R.string.section_notes to Icons.AutoMirrored.Rounded.List,
+            R.string.section_pinned to PinIcon
         )
     }
     Box(Modifier.fillMaxSize()) {
@@ -318,7 +318,7 @@ fun ListChrome(
             )
             GlassIconButton(
                 imageVector = Icons.Rounded.Settings,
-                contentDescription = "Réglages",
+                contentDescription = stringResource(R.string.cd_settings),
                 backdrop = backdrop,
                 onClick = onOpenSettings
             )
@@ -341,18 +341,19 @@ fun ListChrome(
                 accentColor = MaterialTheme.colorScheme.primary
             ) {
                 tabs.forEachIndexed { index, tab ->
+                    val label = stringResource(tab.first)
                     LiquidBottomTab(onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         viewModel.setFilter(NoteFilter.entries[index])
                     }) {
                         Icon(
                             imageVector = tab.second,
-                            contentDescription = tab.first,
+                            contentDescription = label,
                             tint = textColor,
                             modifier = Modifier.size(24f.dp)
                         )
                         Text(
-                            text = tab.first,
+                            text = label,
                             style = MaterialTheme.typography.labelSmall,
                             color = textColor
                         )
@@ -370,7 +371,7 @@ fun ListChrome(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Add,
-                    contentDescription = "Nouvelle note",
+                    contentDescription = stringResource(R.string.cd_new_note),
                     tint = Color.White,
                     modifier = Modifier.size(26f.dp)
                 )
@@ -415,7 +416,7 @@ private fun GlassSearchBar(
                 )
                 if (query.isEmpty()) {
                     Text(
-                        text = "Rechercher une note",
+                        text = stringResource(R.string.search_placeholder),
                         color = textColor.copy(alpha = 0.45f),
                         fontSize = 16.sp,
                         modifier = Modifier.align(Alignment.CenterStart)
@@ -425,7 +426,7 @@ private fun GlassSearchBar(
             if (query.isNotEmpty()) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
-                    contentDescription = "Effacer",
+                    contentDescription = stringResource(R.string.cd_clear_search),
                     tint = textColor.copy(alpha = 0.5f),
                     modifier = Modifier
                         .size(18f.dp)

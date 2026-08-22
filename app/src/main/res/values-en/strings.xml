@@ -52,4 +52,5 @@
     <string name="dialog_reset_all_title">Reset all notes?</string>
     <string name="dialog_reset_all_message">All your notes will be permanently deleted. This action cannot be undone.</string>
     <string name="action_reset">Reset</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

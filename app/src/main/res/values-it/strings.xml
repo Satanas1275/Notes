@@ -52,4 +52,5 @@
     <string name="dialog_reset_all_title">Reimpostare tutte le note?</string>
     <string name="dialog_reset_all_message">Tutte le tue note verranno eliminate definitivamente. Questa azione non può essere annullata.</string>
     <string name="action_reset">Reimposta</string>
+    <string name="yesterday">Ieri</string>
 </resources>

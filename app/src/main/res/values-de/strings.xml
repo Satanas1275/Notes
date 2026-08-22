@@ -52,4 +52,5 @@
     <string name="dialog_reset_all_title">Alle Notizen zurücksetzen?</string>
     <string name="dialog_reset_all_message">Alle deine Notizen werden endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="action_reset">Zurücksetzen</string>
+    <string name="yesterday">Gestern</string>
 </resources>
