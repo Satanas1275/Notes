@@ -3,6 +3,7 @@ package com.satanas1275.notes.ui.notes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -42,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
@@ -83,8 +86,17 @@ fun NotesListContent(
 ) {
     val dark = isSystemInDarkTheme()
     val safePadding = WindowInsets.safeDrawing.asPaddingValues()
+    val listState = rememberLazyListState()
+    // Le flou/lens en temps réel de chaque carte (drawBackdrop) est l'un des
+    // postes les plus coûteux du rendu : avec plusieurs cartes visibles à la
+    // fois, ça fait autant de passes de flou par frame. Pendant le scroll on
+    // bascule sur un simple fond teinté (beaucoup moins cher), et on revient
+    // au vrai effet verre dès que le scroll s'arrête — technique standard
+    // pour garder des listes fluides avec du contenu flouté.
+    val isScrolling = listState.isScrollInProgress
 
     LazyColumn(
+        state = listState,
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
             start = 20f.dp,
@@ -121,6 +133,7 @@ fun NotesListContent(
                     note = note,
                     dark = dark,
                     backdrop = backdrop,
+                    isScrolling = isScrolling,
                     onClick = { onOpenNote(note.id) },
                     onLongClick = { onRequestDelete(note) },
                     modifier = Modifier.animateItem()
@@ -136,6 +149,7 @@ fun NotesListContent(
                     note = note,
                     dark = dark,
                     backdrop = backdrop,
+                    isScrolling = isScrolling,
                     onClick = { onOpenNote(note.id) },
                     onLongClick = { onRequestDelete(note) },
                     modifier = Modifier.animateItem()
@@ -168,6 +182,7 @@ private fun NoteCard(
     note: Note,
     dark: Boolean,
     backdrop: Backdrop,
+    isScrolling: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -182,6 +197,7 @@ private fun NoteCard(
     val cardTint = NotePalette[note.colorIndex.coerceIn(0, NotePalette.lastIndex)]
         .copy(alpha = if (dark) 0.34f else 0.46f)
     val contentColor = if (dark) Color.White else Color(0xFF14161B)
+    val shape = remember { RoundedRectangle(28f.dp) }
 
     Column(
         modifier
@@ -191,17 +207,28 @@ private fun NoteCard(
                 scaleY = scale
             }
             // Même traitement que le "lazy scroll container" du catalogue Backdrop
-            // (vibrancy + lens qui réfractent le fond), avec un peu plus de blur
-            // et la teinte de couleur de la note en surface.
-            .drawBackdrop(
-                backdrop = backdrop,
-                shape = { RoundedRectangle(28f.dp) },
-                effects = {
-                    vibrancy()
-                    blur(14f.dp.toPx())
-                    lens(16f.dp.toPx(), 32f.dp.toPx())
-                },
-                onDrawSurface = { drawRect(cardTint) }
+            // (vibrancy + lens qui réfractent le fond) avec la teinte de couleur
+            // de la note en surface — mais seulement quand la liste est immobile :
+            // le flou en temps réel est cher, et avec plusieurs cartes visibles à
+            // la fois ça fait autant de passes de flou par frame. Pendant le
+            // scroll on bascule sur un simple fond teinté (quasi gratuit).
+            .then(
+                if (isScrolling) {
+                    Modifier
+                        .clip(shape)
+                        .background(cardTint)
+                } else {
+                    Modifier.drawBackdrop(
+                        backdrop = backdrop,
+                        shape = { shape },
+                        effects = {
+                            vibrancy()
+                            blur(10f.dp.toPx())
+                            lens(12f.dp.toPx(), 24f.dp.toPx())
+                        },
+                        onDrawSurface = { drawRect(cardTint) }
+                    )
+                }
             )
             .combinedClickable(
                 interactionSource = interactionSource,

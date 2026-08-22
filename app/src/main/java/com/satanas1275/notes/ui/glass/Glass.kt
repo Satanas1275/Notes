@@ -65,8 +65,8 @@ fun GlassSurface(
                 effects = {
                     val progress = interactiveHighlight.pressProgress
                     vibrancy()
-                    blur(10f.dp.toPx())
-                    lens((14f + 8f * progress).dp.toPx(), (18f + 10f * progress).dp.toPx())
+                    blur(7f.dp.toPx())
+                    lens((10f + 6f * progress).dp.toPx(), (14f + 8f * progress).dp.toPx())
                 },
                 highlight = {
                     val progress = interactiveHighlight.pressProgress

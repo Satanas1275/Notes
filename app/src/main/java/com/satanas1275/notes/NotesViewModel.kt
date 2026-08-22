@@ -1,5 +1,6 @@
 package com.satanas1275.notes
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.satanas1275.notes.data.Note
@@ -16,6 +17,13 @@ enum class NoteFilter {
     PINNED
 }
 
+// @Immutable : le compilateur Compose traite List<T> comme potentiellement
+// mutable par défaut, ce qui rend NotesUiState "instable" et empêche Compose
+// de sauter les recompositions inutiles (ex. à chaque frappe dans la
+// recherche). Le ViewModel ne fait jamais de mutation en place — chaque
+// changement produit un nouvel état avec de nouvelles listes — donc la
+// promesse d'immuabilité est bien respectée.
+@Immutable
 data class NotesUiState(
     val query: String = "",
     val filter: NoteFilter = NoteFilter.ALL,

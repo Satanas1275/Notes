@@ -80,8 +80,8 @@ fun GlassConfirmDialog(
                             brightness = if (dark) 0f else 0.2f,
                             saturation = 1.5f
                         )
-                        blur(if (dark) 8f.dp.toPx() else 16f.dp.toPx())
-                        lens(20f.dp.toPx(), 40f.dp.toPx(), depthEffect = true)
+                        blur(if (dark) 6f.dp.toPx() else 12f.dp.toPx())
+                        lens(16f.dp.toPx(), 32f.dp.toPx(), depthEffect = true)
                     },
                     highlight = { Highlight.Plain },
                     onDrawSurface = { drawRect(containerColor) }
