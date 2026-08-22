@@ -273,7 +273,9 @@ fun ColorPickerChrome(
             backdrop = backdrop,
             tabsCount = NotePalette.size,
             modifier = Modifier.fillMaxWidth(),
-            accentColor = MaterialTheme.colorScheme.primary
+            // null : chaque pastille a déjà sa propre couleur, pas besoin (et
+            // pas envie) du retentage en bleu du composant à la sélection.
+            accentColor = null
         ) {
             NotePalette.forEachIndexed { index, color ->
                 val selected = index == selectedColorIndex

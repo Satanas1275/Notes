@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -66,6 +67,7 @@ import com.satanas1275.notes.ui.glass.GlassIconButton
 import com.satanas1275.notes.ui.glass.GlassSurface
 import com.satanas1275.notes.ui.glass.LiquidBottomTab
 import com.satanas1275.notes.ui.glass.LiquidBottomTabs
+import com.satanas1275.notes.ui.glass.LiquidToggle
 import com.satanas1275.notes.ui.theme.NotePalette
 
 private data class LanguageOption(val tag: String?, val label: String)
@@ -245,15 +247,21 @@ private fun AppearanceSettings(
                 backdrop = backdrop,
                 tabsCount = NotePalette.size,
                 modifier = Modifier.fillMaxWidth(),
-                accentColor = MaterialTheme.colorScheme.primary
+                // null : chaque pastille a déjà sa propre couleur.
+                accentColor = null
             ) {
                 NotePalette.forEachIndexed { index, color ->
                     val selected = index == colorIndex
                     LiquidBottomTab(onClick = { onSetColorIndex(index) }) {
                         Box(
                             Modifier
-                                .size(if (selected) 24f.dp else 20f.dp)
+                                .size(if (selected) 26f.dp else 20f.dp)
                                 .background(color, CircleShape)
+                                .border(
+                                    width = if (selected) 2.5f.dp else 0.5f.dp,
+                                    color = if (selected) textColor else Color.Transparent,
+                                    shape = CircleShape
+                                )
                         )
                     }
                 }
@@ -348,22 +356,16 @@ private fun CloudSyncRow(backdrop: Backdrop, enabled: Boolean, onToggle: (Boolea
                     style = MaterialTheme.typography.labelSmall
                 )
             }
-            // Toggle grisé, non cliquable : la fonctionnalité n'est pas encore
-            // implémentée côté serveur (WIP), on ne veut pas laisser croire
-            // que l'activer fait quoi que ce soit pour l'instant.
-            Box(
-                Modifier
-                    .size(width = 44f.dp, height = 26f.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(textColor.copy(alpha = 0.12f))
-            ) {
-                Box(
-                    Modifier
-                        .padding(3f.dp)
-                        .size(20f.dp)
-                        .background(textColor.copy(alpha = 0.35f), CircleShape)
-                )
-            }
+            // Toggle en verre (glisser ou taper), désactivé visuellement : la
+            // fonctionnalité n'est pas encore implémentée côté serveur (WIP),
+            // on ne veut pas laisser croire que l'activer fait quoi que ce
+            // soit pour l'instant.
+            LiquidToggle(
+                selected = { enabled },
+                onSelect = onToggle,
+                backdrop = backdrop,
+                enabled = false
+            )
         }
     }
 }
