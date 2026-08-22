@@ -47,6 +47,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -62,6 +64,7 @@ import com.kyant.backdrop.effects.vibrancy
 import com.kyant.shapes.RoundedRectangle
 import com.satanas1275.notes.NotesViewModel
 import com.satanas1275.notes.NoteFilter
+import com.satanas1275.notes.R
 import com.satanas1275.notes.data.Note
 import com.satanas1275.notes.ui.glass.GlassIconButton
 import com.satanas1275.notes.ui.glass.GlassSurface
@@ -96,14 +99,14 @@ fun NotesListContent(
         item(key = "header") {
             Column(Modifier.padding(bottom = 8f.dp)) {
                 Text(
-                    text = "Mes notes",
+                    text = stringResource(R.string.header_my_notes),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.height(4f.dp))
                 Text(
-                    text = "${state.totalCount} note${if (state.totalCount > 1) "s" else ""}",
+                    text = pluralStringResource(R.plurals.notes_count, state.totalCount, state.totalCount),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                 )
@@ -112,7 +115,7 @@ fun NotesListContent(
 
         val searching = state.query.isNotBlank()
         if (state.pinned.isNotEmpty() && !searching) {
-            item(key = "section-pinned") { SectionHeader("Épinglées") }
+            item(key = "section-pinned") { SectionHeader(stringResource(R.string.section_pinned)) }
             items(state.pinned, key = { it.id }) { note ->
                 NoteCard(
                     note = note,
@@ -126,7 +129,7 @@ fun NotesListContent(
         }
         if (state.others.isNotEmpty()) {
             if (!searching && state.pinned.isNotEmpty()) {
-                item(key = "section-others") { SectionHeader("Notes") }
+                item(key = "section-others") { SectionHeader(stringResource(R.string.section_notes)) }
             }
             items(state.others, key = { it.id }) { note ->
                 NoteCard(
@@ -210,7 +213,7 @@ private fun NoteCard(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = note.title.ifBlank { "Sans titre" },
+                text = note.title.ifBlank { stringResource(R.string.untitled_note) },
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = contentColor,

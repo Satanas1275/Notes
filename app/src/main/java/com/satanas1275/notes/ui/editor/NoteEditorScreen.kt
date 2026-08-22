@@ -267,15 +267,16 @@ fun ColorPickerChrome(
         // Même composant que la barre d'onglets en bas de la liste : on peut
         // glisser le doigt d'une couleur à l'autre (pilule qui suit le drag,
         // comme dans le catalogue Backdrop) ou taper directement une couleur.
+        // accentColor suit la couleur actuellement sélectionnée (au lieu d'un
+        // bleu fixe) : le "reveal" du composant retente alors le point avec
+        // SA PROPRE couleur plutôt que d'écraser tout le monde en bleu.
         LiquidBottomTabs(
             selectedTabIndex = { selectedColorIndex },
             onTabSelected = onSelectColor,
             backdrop = backdrop,
             tabsCount = NotePalette.size,
             modifier = Modifier.fillMaxWidth(),
-            // null : chaque pastille a déjà sa propre couleur, pas besoin (et
-            // pas envie) du retentage en bleu du composant à la sélection.
-            accentColor = null
+            accentColor = NotePalette[selectedColorIndex.coerceIn(0, NotePalette.lastIndex)]
         ) {
             NotePalette.forEachIndexed { index, color ->
                 val selected = index == selectedColorIndex

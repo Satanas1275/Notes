@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">笔记</string>
+
+    <string name="header_my_notes">我的笔记</string>
+    <plurals name="notes_count">
+        <item quantity="other">%d 条笔记</item>
+    </plurals>
+    <string name="section_pinned">已置顶</string>
+    <string name="section_notes">笔记</string>
+    <string name="untitled_note">无标题</string>
+    <string name="cd_pinned">已置顶</string>
+    <string name="empty_no_results">无结果</string>
+    <string name="empty_no_notes">暂无笔记</string>
+    <string name="empty_no_notes_hint">点击 + 按钮创建一条笔记。</string>
+    <string name="cd_settings">设置</string>
+    <string name="cd_new_note">新建笔记</string>
+    <string name="search_placeholder">搜索笔记</string>
+    <string name="cd_clear_search">清除</string>
+
+    <string name="editor_title_placeholder">标题</string>
+    <string name="editor_content_placeholder">开始输入…</string>
+    <string name="cd_back">返回</string>
+    <string name="cd_unpin">取消置顶</string>
+    <string name="cd_pin">置顶</string>
+    <string name="cd_delete">删除</string>
+
+    <string name="settings_title">设置</string>
+    <string name="section_appearance">外观</string>
+    <string name="section_sync">同步</string>
+    <string name="section_language">语言</string>
+    <string name="section_data">数据</string>
+    <string name="section_about">关于</string>
+    <string name="action_reset_all_notes">重置所有笔记</string>
+    <string name="style_gradient">渐变</string>
+    <string name="style_solid_color">纯色</string>
+    <string name="style_image">图片</string>
+    <string name="image_active">自定义图片已启用</string>
+    <string name="action_remove">移除</string>
+    <string name="action_change_image">更换图片</string>
+    <string name="action_choose_image">选择图片</string>
+    <string name="cloud_sync_title">云同步</string>
+    <string name="cloud_sync_subtitle">即将推出</string>
+    <string name="language_system_default">系统默认</string>
+
+    <string name="dialog_cancel">取消</string>
+    <string name="action_delete">删除</string>
+    <string name="dialog_delete_note_title">删除这条笔记？</string>
+    <string name="dialog_delete_note_message">“%1$s” 将被永久删除。</string>
+    <string name="dialog_delete_note_irreversible_message">此操作无法撤销。</string>
+    <string name="dialog_reset_all_title">重置所有笔记？</string>
+    <string name="dialog_reset_all_message">您的所有笔记都将被永久删除。此操作无法撤销。</string>
+    <string name="action_reset">重置</string>
+</resources>

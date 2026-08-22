@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notas</string>
+
+    <string name="header_my_notes">Minhas notas</string>
+    <plurals name="notes_count">
+        <item quantity="one">%d nota</item>
+        <item quantity="other">%d notas</item>
+    </plurals>
+    <string name="section_pinned">Fixadas</string>
+    <string name="section_notes">Notas</string>
+    <string name="untitled_note">Sem título</string>
+    <string name="cd_pinned">Fixada</string>
+    <string name="empty_no_results">Nenhum resultado</string>
+    <string name="empty_no_notes">Nenhuma nota</string>
+    <string name="empty_no_notes_hint">Toque no botão + para criar uma.</string>
+    <string name="cd_settings">Configurações</string>
+    <string name="cd_new_note">Nova nota</string>
+    <string name="search_placeholder">Pesquisar uma nota</string>
+    <string name="cd_clear_search">Limpar</string>
+
+    <string name="editor_title_placeholder">Título</string>
+    <string name="editor_content_placeholder">Comece a escrever…</string>
+    <string name="cd_back">Voltar</string>
+    <string name="cd_unpin">Desafixar</string>
+    <string name="cd_pin">Fixar</string>
+    <string name="cd_delete">Excluir</string>
+
+    <string name="settings_title">Configurações</string>
+    <string name="section_appearance">Aparência</string>
+    <string name="section_sync">Sincronização</string>
+    <string name="section_language">Idioma</string>
+    <string name="section_data">Dados</string>
+    <string name="section_about">Sobre</string>
+    <string name="action_reset_all_notes">Redefinir todas as notas</string>
+    <string name="style_gradient">Gradiente</string>
+    <string name="style_solid_color">Cor</string>
+    <string name="style_image">Imagem</string>
+    <string name="image_active">Imagem personalizada ativa</string>
+    <string name="action_remove">Remover</string>
+    <string name="action_change_image">Alterar imagem</string>
+    <string name="action_choose_image">Escolher uma imagem</string>
+    <string name="cloud_sync_title">Sincronização na nuvem</string>
+    <string name="cloud_sync_subtitle">Em breve</string>
+    <string name="language_system_default">Idioma do sistema</string>
+
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="action_delete">Excluir</string>
+    <string name="dialog_delete_note_title">Excluir esta nota?</string>
+    <string name="dialog_delete_note_message">"“%1$s” será excluída permanentemente."</string>
+    <string name="dialog_delete_note_irreversible_message">Esta ação não pode ser desfeita.</string>
+    <string name="dialog_reset_all_title">Redefinir todas as notas?</string>
+    <string name="dialog_reset_all_message">Todas as suas notas serão excluídas permanentemente. Esta ação não pode ser desfeita.</string>
+    <string name="action_reset">Redefinir</string>
+</resources>

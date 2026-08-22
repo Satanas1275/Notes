@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notizen</string>
+
+    <string name="header_my_notes">Meine Notizen</string>
+    <plurals name="notes_count">
+        <item quantity="one">%d Notiz</item>
+        <item quantity="other">%d Notizen</item>
+    </plurals>
+    <string name="section_pinned">Angeheftet</string>
+    <string name="section_notes">Notizen</string>
+    <string name="untitled_note">Ohne Titel</string>
+    <string name="cd_pinned">Angeheftet</string>
+    <string name="empty_no_results">Keine Ergebnisse</string>
+    <string name="empty_no_notes">Keine Notizen</string>
+    <string name="empty_no_notes_hint">Tippe auf das +, um eine zu erstellen.</string>
+    <string name="cd_settings">Einstellungen</string>
+    <string name="cd_new_note">Neue Notiz</string>
+    <string name="search_placeholder">Notiz suchen</string>
+    <string name="cd_clear_search">Löschen</string>
+
+    <string name="editor_title_placeholder">Titel</string>
+    <string name="editor_content_placeholder">Schreib los…</string>
+    <string name="cd_back">Zurück</string>
+    <string name="cd_unpin">Lösen</string>
+    <string name="cd_pin">Anheften</string>
+    <string name="cd_delete">Löschen</string>
+
+    <string name="settings_title">Einstellungen</string>
+    <string name="section_appearance">Erscheinungsbild</string>
+    <string name="section_sync">Synchronisierung</string>
+    <string name="section_language">Sprache</string>
+    <string name="section_data">Daten</string>
+    <string name="section_about">Über</string>
+    <string name="action_reset_all_notes">Alle Notizen zurücksetzen</string>
+    <string name="style_gradient">Verlauf</string>
+    <string name="style_solid_color">Farbe</string>
+    <string name="style_image">Bild</string>
+    <string name="image_active">Eigenes Bild aktiv</string>
+    <string name="action_remove">Entfernen</string>
+    <string name="action_change_image">Bild ändern</string>
+    <string name="action_choose_image">Bild auswählen</string>
+    <string name="cloud_sync_title">Cloud-Synchronisierung</string>
+    <string name="cloud_sync_subtitle">Demnächst verfügbar</string>
+    <string name="language_system_default">Systemsprache</string>
+
+    <string name="dialog_cancel">Abbrechen</string>
+    <string name="action_delete">Löschen</string>
+    <string name="dialog_delete_note_title">Notiz löschen?</string>
+    <string name="dialog_delete_note_message">"„%1$s“ wird endgültig gelöscht."</string>
+    <string name="dialog_delete_note_irreversible_message">Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="dialog_reset_all_title">Alle Notizen zurücksetzen?</string>
+    <string name="dialog_reset_all_message">Alle deine Notizen werden endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="action_reset">Zurücksetzen</string>
+</resources>

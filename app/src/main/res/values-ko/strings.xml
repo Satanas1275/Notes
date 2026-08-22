@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">메모</string>
+
+    <string name="header_my_notes">내 메모</string>
+    <plurals name="notes_count">
+        <item quantity="other">메모 %d개</item>
+    </plurals>
+    <string name="section_pinned">고정됨</string>
+    <string name="section_notes">메모</string>
+    <string name="untitled_note">제목 없음</string>
+    <string name="cd_pinned">고정됨</string>
+    <string name="empty_no_results">결과 없음</string>
+    <string name="empty_no_notes">메모 없음</string>
+    <string name="empty_no_notes_hint">+ 버튼을 눌러 새로 만드세요.</string>
+    <string name="cd_settings">설정</string>
+    <string name="cd_new_note">새 메모</string>
+    <string name="search_placeholder">메모 검색</string>
+    <string name="cd_clear_search">지우기</string>
+
+    <string name="editor_title_placeholder">제목</string>
+    <string name="editor_content_placeholder">입력을 시작하세요…</string>
+    <string name="cd_back">뒤로</string>
+    <string name="cd_unpin">고정 해제</string>
+    <string name="cd_pin">고정</string>
+    <string name="cd_delete">삭제</string>
+
+    <string name="settings_title">설정</string>
+    <string name="section_appearance">모양</string>
+    <string name="section_sync">동기화</string>
+    <string name="section_language">언어</string>
+    <string name="section_data">데이터</string>
+    <string name="section_about">정보</string>
+    <string name="action_reset_all_notes">모든 메모 초기화</string>
+    <string name="style_gradient">그라데이션</string>
+    <string name="style_solid_color">단색</string>
+    <string name="style_image">이미지</string>
+    <string name="image_active">사용자 지정 이미지 사용 중</string>
+    <string name="action_remove">제거</string>
+    <string name="action_change_image">이미지 변경</string>
+    <string name="action_choose_image">이미지 선택</string>
+    <string name="cloud_sync_title">클라우드 동기화</string>
+    <string name="cloud_sync_subtitle">준비 중</string>
+    <string name="language_system_default">시스템 기본값</string>
+
+    <string name="dialog_cancel">취소</string>
+    <string name="action_delete">삭제</string>
+    <string name="dialog_delete_note_title">이 메모를 삭제할까요?</string>
+    <string name="dialog_delete_note_message">"“%1$s”이(가) 영구적으로 삭제됩니다."</string>
+    <string name="dialog_delete_note_irreversible_message">이 작업은 되돌릴 수 없습니다.</string>
+    <string name="dialog_reset_all_title">모든 메모를 초기화할까요?</string>
+    <string name="dialog_reset_all_message">모든 메모가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.</string>
+    <string name="action_reset">초기화</string>
+</resources>

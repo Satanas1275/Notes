@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notas</string>
+
+    <string name="header_my_notes">Mis notas</string>
+    <plurals name="notes_count">
+        <item quantity="one">%d nota</item>
+        <item quantity="other">%d notas</item>
+    </plurals>
+    <string name="section_pinned">Fijadas</string>
+    <string name="section_notes">Notas</string>
+    <string name="untitled_note">Sin título</string>
+    <string name="cd_pinned">Fijada</string>
+    <string name="empty_no_results">Sin resultados</string>
+    <string name="empty_no_notes">Sin notas</string>
+    <string name="empty_no_notes_hint">Toca el botón + para crear una.</string>
+    <string name="cd_settings">Ajustes</string>
+    <string name="cd_new_note">Nueva nota</string>
+    <string name="search_placeholder">Buscar una nota</string>
+    <string name="cd_clear_search">Borrar</string>
+
+    <string name="editor_title_placeholder">Título</string>
+    <string name="editor_content_placeholder">Empieza a escribir…</string>
+    <string name="cd_back">Atrás</string>
+    <string name="cd_unpin">Dejar de fijar</string>
+    <string name="cd_pin">Fijar</string>
+    <string name="cd_delete">Eliminar</string>
+
+    <string name="settings_title">Ajustes</string>
+    <string name="section_appearance">Apariencia</string>
+    <string name="section_sync">Sincronización</string>
+    <string name="section_language">Idioma</string>
+    <string name="section_data">Datos</string>
+    <string name="section_about">Acerca de</string>
+    <string name="action_reset_all_notes">Restablecer todas las notas</string>
+    <string name="style_gradient">Degradado</string>
+    <string name="style_solid_color">Color</string>
+    <string name="style_image">Imagen</string>
+    <string name="image_active">Imagen personalizada activa</string>
+    <string name="action_remove">Quitar</string>
+    <string name="action_change_image">Cambiar imagen</string>
+    <string name="action_choose_image">Elegir una imagen</string>
+    <string name="cloud_sync_title">Sincronización en la nube</string>
+    <string name="cloud_sync_subtitle">Próximamente</string>
+    <string name="language_system_default">Idioma del sistema</string>
+
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="dialog_delete_note_title">¿Eliminar esta nota?</string>
+    <string name="dialog_delete_note_message">"«%1$s» se eliminará permanentemente."</string>
+    <string name="dialog_delete_note_irreversible_message">Esta acción no se puede deshacer.</string>
+    <string name="dialog_reset_all_title">¿Restablecer todas las notas?</string>
+    <string name="dialog_reset_all_message">Todas tus notas se eliminarán permanentemente. Esta acción no se puede deshacer.</string>
+    <string name="action_reset">Restablecer</string>
+</resources>

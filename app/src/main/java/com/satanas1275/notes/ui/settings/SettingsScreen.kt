@@ -9,7 +9,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -247,21 +246,18 @@ private fun AppearanceSettings(
                 backdrop = backdrop,
                 tabsCount = NotePalette.size,
                 modifier = Modifier.fillMaxWidth(),
-                // null : chaque pastille a déjà sa propre couleur.
-                accentColor = null
+                // accentColor suit la couleur sélectionnée plutôt qu'un bleu
+                // fixe : le "reveal" du composant retente le point avec SA
+                // PROPRE couleur au lieu d'écraser tout le monde en bleu.
+                accentColor = NotePalette[colorIndex.coerceIn(0, NotePalette.lastIndex)]
             ) {
                 NotePalette.forEachIndexed { index, color ->
                     val selected = index == colorIndex
                     LiquidBottomTab(onClick = { onSetColorIndex(index) }) {
                         Box(
                             Modifier
-                                .size(if (selected) 26f.dp else 20f.dp)
+                                .size(if (selected) 24f.dp else 20f.dp)
                                 .background(color, CircleShape)
-                                .border(
-                                    width = if (selected) 2.5f.dp else 0.5f.dp,
-                                    color = if (selected) textColor else Color.Transparent,
-                                    shape = CircleShape
-                                )
                         )
                     }
                 }
