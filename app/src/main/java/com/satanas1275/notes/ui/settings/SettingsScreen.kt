@@ -60,6 +60,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import android.net.Uri
 import com.kyant.backdrop.Backdrop
+import com.kyant.backdrop.drawBackdrop
+import com.kyant.backdrop.effects.blur
+import com.kyant.backdrop.effects.lens
+import com.kyant.backdrop.effects.vibrancy
+import com.kyant.backdrop.highlight.Highlight
+import com.kyant.shapes.RoundedRectangle
 import com.satanas1275.notes.R
 import com.satanas1275.notes.data.AppSettings
 import com.satanas1275.notes.data.BackgroundStyle
@@ -411,8 +417,19 @@ private fun LanguageRow(backdrop: Backdrop, currentTag: String?, onSelect: (Stri
                 Modifier
                     .fillMaxWidth()
                     .padding(top = 8f.dp)
-                    .clip(RoundedCornerShape(20f.dp))
-                    .background(if (dark) Color(0xFF10131A).copy(alpha = 0.5f) else Color.White.copy(alpha = 0.55f))
+                    .drawBackdrop(
+                        backdrop = backdrop,
+                        shape = { RoundedRectangle(20f.dp) },
+                        effects = {
+                            vibrancy()
+                            blur(8f.dp.toPx())
+                            lens(8f.dp.toPx(), 16f.dp.toPx())
+                        },
+                        highlight = { Highlight.Plain },
+                        onDrawSurface = {
+                            drawRect(if (dark) Color(0xFF10131A).copy(alpha = 0.5f) else Color.White.copy(alpha = 0.55f))
+                        }
+                    )
             ) {
                 LanguageOptions.forEach { option ->
                     val selected = option.tag == currentTag

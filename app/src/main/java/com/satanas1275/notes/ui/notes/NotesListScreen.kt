@@ -3,7 +3,6 @@ package com.satanas1275.notes.ui.notes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -44,7 +43,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
@@ -208,27 +206,23 @@ private fun NoteCard(
             }
             // Même traitement que le "lazy scroll container" du catalogue Backdrop
             // (vibrancy + lens qui réfractent le fond) avec la teinte de couleur
-            // de la note en surface — mais seulement quand la liste est immobile :
-            // le flou en temps réel est cher, et avec plusieurs cartes visibles à
-            // la fois ça fait autant de passes de flou par frame. Pendant le
-            // scroll on bascule sur un simple fond teinté (quasi gratuit).
-            .then(
-                if (isScrolling) {
-                    Modifier
-                        .clip(shape)
-                        .background(cardTint)
-                } else {
-                    Modifier.drawBackdrop(
-                        backdrop = backdrop,
-                        shape = { shape },
-                        effects = {
-                            vibrancy()
-                            blur(10f.dp.toPx())
-                            lens(12f.dp.toPx(), 24f.dp.toPx())
-                        },
-                        onDrawSurface = { drawRect(cardTint) }
-                    )
-                }
+            // de la note en surface. Le drawBackdrop reste TOUJOURS le même nœud
+            // (pas de switch de Modifier entre scroll/repos, ça provoquait de
+            // vrais freeze à chaque bascule en recréant tout le calque, et faisait
+            // disparaître la bordure/highlight du verre pendant le scroll) : seul
+            // le flou (le plus coûteux) est allégé pendant le scroll actif, la
+            // bordure et le reste de l'effet restent identiques en permanence.
+            .drawBackdrop(
+                backdrop = backdrop,
+                shape = { shape },
+                effects = {
+                    vibrancy()
+                    if (!isScrolling) {
+                        blur(10f.dp.toPx())
+                        lens(12f.dp.toPx(), 24f.dp.toPx())
+                    }
+                },
+                onDrawSurface = { drawRect(cardTint) }
             )
             .combinedClickable(
                 interactionSource = interactionSource,

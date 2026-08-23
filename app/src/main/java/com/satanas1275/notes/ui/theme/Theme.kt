@@ -10,11 +10,12 @@ import androidx.compose.ui.graphics.Color
 val LightBase = Color(0xFFF3F5FB)
 val DarkBase = Color(0xFF0B0D13)
 
-val AccentLight = Color(0xFF0A84FF)
-val AccentDark = Color(0xFF409CFF)
+// Bleu système iOS : #007AFF en mode clair, #0A84FF en mode sombre.
+val AccentLight = Color(0xFF007AFF)
+val AccentDark = Color(0xFF0A84FF)
 
 val NotePalette = listOf(
-    Color(0xFF0A84FF),
+    Color(0xFF007AFF),
     Color(0xFFBF5AF2),
     Color(0xFFFF375F),
     Color(0xFFFF9F0A),

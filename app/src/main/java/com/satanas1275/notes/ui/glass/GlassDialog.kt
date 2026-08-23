@@ -21,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.drawBackdrop
 import com.kyant.backdrop.effects.blur
@@ -74,14 +76,15 @@ fun GlassConfirmDialog(
                 .padding(40f.dp)
                 .drawBackdrop(
                     backdrop = backdrop,
-                    shape = { RoundedRectangle(32f.dp) },
+                    // 48dp : même rayon que DialogContent.kt du catalogue.
+                    shape = { RoundedRectangle(48f.dp) },
                     effects = {
                         colorControls(
                             brightness = if (dark) 0f else 0.2f,
                             saturation = 1.5f
                         )
-                        blur(if (dark) 6f.dp.toPx() else 12f.dp.toPx())
-                        lens(16f.dp.toPx(), 32f.dp.toPx(), depthEffect = true)
+                        blur(if (dark) 8f.dp.toPx() else 16f.dp.toPx())
+                        lens(24f.dp.toPx(), 48f.dp.toPx(), depthEffect = true)
                     },
                     highlight = { Highlight.Plain },
                     onDrawSurface = { drawRect(containerColor) }
@@ -96,28 +99,27 @@ fun GlassConfirmDialog(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold,
+                style = TextStyle(fontSize = 24f.sp, fontWeight = FontWeight.Medium),
                 color = contentColor,
-                modifier = Modifier.padding(24f.dp, 24f.dp, 24f.dp, 8f.dp)
+                modifier = Modifier.padding(28f.dp, 24f.dp, 28f.dp, 12f.dp)
             )
             Text(
                 text = message,
-                style = MaterialTheme.typography.bodyMedium,
+                style = TextStyle(fontSize = 15f.sp),
                 color = contentColor.copy(alpha = 0.68f),
-                modifier = Modifier.padding(24f.dp, 8f.dp, 24f.dp, 12f.dp)
+                modifier = Modifier.padding(24f.dp, 12f.dp, 24f.dp, 12f.dp)
             )
             Row(
                 Modifier
-                    .padding(20f.dp, 8f.dp, 20f.dp, 20f.dp)
+                    .padding(24f.dp, 12f.dp, 24f.dp, 24f.dp)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12f.dp),
+                horizontalArrangement = Arrangement.spacedBy(16f.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
                     Modifier
                         .clip(Capsule())
-                        .background(containerColor.copy(alpha = 0.5f))
+                        .background(containerColor.copy(alpha = 0.2f))
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
@@ -126,10 +128,14 @@ fun GlassConfirmDialog(
                         .height(48f.dp)
                         .weight(1f)
                         .padding(horizontal = 16f.dp),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.spacedBy(4f.dp, Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.dialog_cancel), color = contentColor, style = MaterialTheme.typography.labelLarge)
+                    Text(
+                        stringResource(R.string.dialog_cancel),
+                        color = contentColor,
+                        style = TextStyle(fontSize = 16f.sp)
+                    )
                 }
                 Row(
                     Modifier
@@ -143,10 +149,10 @@ fun GlassConfirmDialog(
                         .height(48f.dp)
                         .weight(1f)
                         .padding(horizontal = 16f.dp),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.spacedBy(4f.dp, Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(confirmLabel, color = Color.White, style = MaterialTheme.typography.labelLarge)
+                    Text(confirmLabel, color = Color.White, style = TextStyle(fontSize = 16f.sp))
                 }
             }
         }
