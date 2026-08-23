@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Notes" parent="android:Theme.Material.NoActionBar">
+    <!-- AppCompatActivity (nécessaire pour que le changement de langue par
+         app fonctionne, voir MainActivity.kt) exige un thème Theme.AppCompat
+         ou descendant, sinon l'app plante au lancement avec :
+         "You need to use a Theme.AppCompat theme (or descendant) with this
+         activity." -->
+    <style name="Theme.Notes" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/base_background</item>
     </style>
 </resources>
